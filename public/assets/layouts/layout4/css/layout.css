@@ -66,7 +66,7 @@ Page Header
       display: block;
       float: left; }
     .page-header.navbar .page-logo .logo-default {
-      margin: 15px 10px 0 10px; }
+      margin: 17px 10px 0 10px; }
     .page-header.navbar .page-logo .logo-mini {
       display: none;
       margin-left: 5px; }
@@ -1321,7 +1321,7 @@ Page footer
   right: 10px; }
   .scroll-to-top > i {
     display: inline-block;
-    color: #687991;
+    color: #fd9827;
     font-size: 32px;
     opacity: 0.7 ;
     filter: alpha(opacity=70) ; }
