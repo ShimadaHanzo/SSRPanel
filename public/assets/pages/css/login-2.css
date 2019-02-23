@@ -131,13 +131,13 @@ Login page
 .login .btn {
   background-color: #333;
   border: 1px solid #fdfdfd;
-  color: #8fc4e5;
+  color: #fdfdfd;
   font-weight: 600;
   padding: 10px 25px !important; }
   .login .btn:hover {
     border: 1px solid #555;
     background-color: #fd9827;
-    color: #8fc4e5; }
+    color: #fdfdfd; }
 
 .login .btn-default {
   background-color: #333;
@@ -148,7 +148,7 @@ Login page
   .login .btn-default:hover {
     border: 1px solid #555;
     background-color: #fd9827;
-    color: #8fc4e5; }
+    color: #fdfdfd; }
 
 .login .content .forget-password {
   color: #d7eaf7;
