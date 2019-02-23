@@ -129,24 +129,24 @@ Login page
   margin-top: 1px; }
 
 .login .btn {
-  background-color: #5995bb;
+  background-color: #333;
   border: 1px solid #fdfdfd;
   color: #8fc4e5;
   font-weight: 600;
   padding: 10px 25px !important; }
   .login .btn:hover {
-    border: 1px solid #90bbd7;
-    background-color: #5995bb;
+    border: 1px solid #555;
+    background-color: #fd9827;
     color: #8fc4e5; }
 
 .login .btn-default {
   background-color: #333;
-  border: 1px solid #72a9cc;
-  color: #8fc4e5;
+  border: 1px solid #fdfdfd;
+  color: #fdfdfd;
   font-weight: 600;
   padding: 10px 25px !important; }
   .login .btn-default:hover {
-    border: 1px solid #fdfdfd;
+    border: 1px solid #555;
     background-color: #fd9827;
     color: #8fc4e5; }
 
