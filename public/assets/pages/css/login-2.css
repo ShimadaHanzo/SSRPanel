@@ -4,7 +4,7 @@ Login page
 ***/
 /* bg color */
 .login {
-  background-color: #333; }
+  background-color: #1b1b1b; }
   .login a {
     color: #edf4f8 !important; }
 
@@ -129,7 +129,7 @@ Login page
   margin-top: 1px; }
 
 .login .btn {
-  background-color: #333;
+  background-color: #1b1b1b;
   border: 1px solid #fdfdfd;
   color: #fdfdfd;
   font-weight: 600;
@@ -140,7 +140,7 @@ Login page
     color: #fdfdfd; }
 
 .login .btn-default {
-  background-color: #333;
+  background-color: #1b1b1b;
   border: 1px solid #fdfdfd;
   color: #fdfdfd;
   font-weight: 600;
