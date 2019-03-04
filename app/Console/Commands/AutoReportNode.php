@@ -32,8 +32,8 @@ class AutoReportNode extends Command
                 foreach ($nodeList as $node) {
                     $log = SsNodeTrafficDaily::query()
                         ->where('node_id', $node->id)
-                        ->where('created_at', '>=', date('Y-m-d 00:00:00', strtotime("-1 day")))
-                        ->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime("-1 day")))
+                        ->where('created_at', '>=', date('Y-m-d 00:00:00', strtotime("0 day")))
+                        ->where('created_at', '<=', date('Y-m-d 23:59:59', strtotime("0 day")))
                         ->first();
 
                     if ($log) {
