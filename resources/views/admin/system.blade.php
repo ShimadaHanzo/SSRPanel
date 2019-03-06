@@ -26,7 +26,7 @@
                                             <a href="#tab_2" data-toggle="tab"> 拓展设置 </a>
                                         </li>
                                         <li>
-                                            <a href="#tab_3" data-toggle="tab"> 积分设置 </a>
+                                            <a href="#tab_3" data-toggle="tab"> 签到设置 </a>
                                         </li>
                                         <li>
                                             <a href="#tab_4" data-toggle="tab"> 推广返利设置 </a>
@@ -403,35 +403,36 @@
                                                 <div class="portlet-body">
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="login_add_score" class="col-md-3 control-label">登录加积分</label>
+                                                            <label for="is_checkin" class="col-md-3 control-label">签到加流量</label>
                                                             <div class="col-md-9">
-                                                                <input type="checkbox" class="make-switch" @if($login_add_score) checked @endif id="login_add_score" data-on-color="success" data-off-color="danger" data-on-text="启用" data-off-text="关闭">
-                                                                <span class="help-block"> 登录时将根据积分范围随机得到积分 </span>
+                                                                <input type="checkbox" class="make-switch" @if($is_checkin) checked @endif id="is_checkin" data-on-color="success" data-off-color="danger" data-on-text="启用" data-off-text="关闭">
+                                                                <span class="help-block"> 登录时将根据流量范围随机得到流量 </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="login_add_score_range" class="col-md-3 control-label">时间间隔</label>
+                                                            <label for="traffic_limit_time" class="col-md-3 control-label">时间间隔</label>
                                                             <div class="col-md-9">
                                                                 <div class="input-group">
-                                                                    <input class="form-control" type="text" name="login_add_score_range" value="{{$login_add_score_range}}" id="login_add_score_range" />
+                                                                    <input class="form-control" type="text" name="traffic_limit_time" value="{{$traffic_limit_time}}" id="traffic_limit_time" />
                                                                     <span class="input-group-addon">分钟</span>
                                                                     <span class="input-group-btn">
-                                                                        <button class="btn btn-success" type="button" onclick="setLoginAddScoreRange()">修改</button>
+                                                                        <button class="btn btn-success" type="button" onclick="setTrafficLimitTime()">修改</button>
                                                                     </span>
                                                                 </div>
-                                                                <span class="help-block"> 间隔多久登录才会加积分 </span>
+                                                                <span class="help-block"> 间隔多久才可以再次签到 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label class="col-md-3 control-label">积分范围</label>
+                                                            <label class="col-md-3 control-label">流量范围</label>
                                                             <div class="col-md-9">
                                                                 <div class="input-group input-large input-daterange">
-                                                                    <input type="text" class="form-control" name="min_rand_score" value="{{$min_rand_score}}" id="min_rand_score">
+                                                                    <input type="text" class="form-control" name="min_rand_traffic" value="{{$min_rand_traffic}}" id="min_rand_traffic">
                                                                     <span class="input-group-addon"> ~ </span>
-                                                                    <input type="text" class="form-control" name="max_rand_score" value="{{$max_rand_score}}" id="max_rand_score">
+                                                                    <input type="text" class="form-control" name="max_rand_traffic" value="{{$max_rand_traffic}}" id="max_rand_traffic">
                                                                 </div>
+                                                                <span class="help-block"> 单位：M </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -548,7 +549,7 @@
                                                             <label for="is_node_crash_warning" class="col-md-3 control-label">节点离线提醒</label>
                                                             <div class="col-md-9">
                                                                 <input type="checkbox" class="make-switch" @if($is_node_crash_warning) checked @endif id="is_node_crash_warning" data-on-color="success" data-off-color="danger" data-on-text="启用" data-off-text="关闭">
-                                                                <span class="help-block"> 启用后如果节点离线则发出提醒邮件 </span>
+                                                                <span class="help-block"> 启用后如果节点离线则通过ServerChan推送提醒 </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -1186,14 +1187,14 @@
         });
 
         // 启用、禁用登录加积分
-        $('#login_add_score').on({
+        $('#is_checkin').on({
             'switchChange.bootstrapSwitch': function (event, state) {
-                var login_add_score = state ? 1 : 0;
+                var is_checkin = state ? 1 : 0;
 
                 $.post("{{url('admin/setConfig')}}", {
                     _token: '{{csrf_token()}}',
-                    name: 'login_add_score',
-                    value: login_add_score
+                    name: 'is_checkin',
+                    value: is_checkin
                 }, function (ret) {
                     layer.msg(ret.message, {time: 1000}, function () {
                         if (ret.status == 'fail') {
@@ -2116,24 +2117,24 @@
         });
 
         // 设置最小积分
-        $("#min_rand_score").change(function () {
-            var min_rand_score = $(this).val();
-            var max_rand_score = $("#max_rand_score").val();
+        $("#min_rand_traffic").change(function () {
+            var min_rand_traffic = $(this).val();
+            var max_rand_traffic = $("#max_rand_traffic").val();
 
-            if (parseInt(min_rand_score) < 0) {
+            if (parseInt(min_rand_traffic) < 0) {
                 layer.msg('最小积分值不能小于0', {time: 1000});
                 return;
             }
 
-            if (parseInt(min_rand_score) >= parseInt(max_rand_score)) {
+            if (parseInt(min_rand_traffic) >= parseInt(max_rand_traffic)) {
                 layer.msg('最小积分值必须小于最大积分值', {time: 1000});
                 return;
             }
 
             $.post("{{url('admin/setConfig')}}", {
                 _token: '{{csrf_token()}}',
-                name: 'min_rand_score',
-                value: min_rand_score
+                name: 'min_rand_traffic',
+                value: min_rand_traffic
             }, function (ret) {
                 layer.msg(ret.message, {time: 1000}, function () {
                     if (ret.status == 'fail') {
@@ -2144,24 +2145,24 @@
         });
 
         // 设置最大积分
-        $("#max_rand_score").change(function () {
-            var min_rand_score = $("#min_rand_score").val();
-            var max_rand_score = $(this).val();
+        $("#max_rand_traffic").change(function () {
+            var min_rand_traffic = $("#min_rand_traffic").val();
+            var max_rand_traffic = $(this).val();
 
-            if (parseInt(max_rand_score) > 99999) {
+            if (parseInt(max_rand_traffic) > 99999) {
                 layer.msg('最大积分值不能大于99999', {time: 1000});
                 return;
             }
 
-            if (parseInt(min_rand_score) >= parseInt(max_rand_score)) {
+            if (parseInt(min_rand_traffic) >= parseInt(max_rand_traffic)) {
                 layer.msg('最大积分值必须大于最小积分值', {time: 1000});
                 return;
             }
 
             $.post("{{url('admin/setConfig')}}", {
                 _token: '{{csrf_token()}}',
-                name: 'max_rand_score',
-                value: max_rand_score
+                name: 'max_rand_traffic',
+                value: max_rand_traffic
             }, function (ret) {
                 layer.msg(ret.message, {time: 1000}, function () {
                     if (ret.status == 'fail') {
@@ -2518,18 +2519,18 @@
         }
 
         // 登录加积分的时间间隔
-        function setLoginAddScoreRange() {
-            var login_add_score_range = parseInt($("#login_add_score_range").val());
+        function setTrafficLimitTime() {
+            var traffic_limit_time = parseInt($("#traffic_limit_time").val());
 
-            if (login_add_score_range < 0) {
+            if (traffic_limit_time < 0) {
                 layer.msg('不能小于0', {time: 1000});
                 return;
             }
 
             $.post("{{url('admin/setConfig')}}", {
                 _token: '{{csrf_token()}}',
-                name: 'login_add_score_range',
-                value: login_add_score_range
+                name: 'traffic_limit_time',
+                value: traffic_limit_time
             }, function (ret) {
                 layer.msg(ret.message, {time: 1000}, function () {
                     if (ret.status == 'fail') {
