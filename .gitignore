@@ -20,4 +20,4 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
-/public/assets/images
+/public/favicon.ico
