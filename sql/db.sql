@@ -33,10 +33,10 @@ CREATE TABLE `ss_node` (
   `ip` CHAR(15) NULL DEFAULT '' COMMENT '服务器IPV4地址',
   `ipv6` CHAR(128) NULL DEFAULT '' COMMENT '服务器IPV6地址',
   `desc` VARCHAR(255) NULL DEFAULT '' COMMENT '节点简单描述',
-  `method` VARCHAR(32) NOT NULL DEFAULT 'aes-192-ctr' COMMENT '加密方式',
-  `protocol` VARCHAR(128) NOT NULL DEFAULT 'auth_chain_a' COMMENT '协议',
+  `method` VARCHAR(32) NOT NULL DEFAULT 'aes-256-cfb' COMMENT '加密方式',
+  `protocol` VARCHAR(128) NOT NULL DEFAULT 'origin' COMMENT '协议',
   `protocol_param` VARCHAR(128) NULL DEFAULT '' COMMENT '协议参数',
-  `obfs` VARCHAR(128) NOT NULL DEFAULT 'tls1.2_ticket_auth' COMMENT '混淆',
+  `obfs` VARCHAR(128) NOT NULL DEFAULT 'plain' COMMENT '混淆',
   `obfs_param` VARCHAR(128) NULL DEFAULT '' COMMENT '混淆参数',
   `traffic_rate` FLOAT NOT NULL DEFAULT '1.00' COMMENT '流量比率',
   `bandwidth` INT(11) NOT NULL DEFAULT '100' COMMENT '出口带宽，单位M',
@@ -47,8 +47,8 @@ CREATE TABLE `ss_node` (
   `is_udp` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '是否允许UDP：0-否、1-是',
   `ssh_port` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '22' COMMENT 'SSH端口',
   `is_tcp_check` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '是否开启检测: 0-不开启、1-开启',
-  `compatible` TINYINT(4) NULL DEFAULT '0' COMMENT '兼容SS',
-  `single` TINYINT(4) NULL DEFAULT '0' COMMENT '单端口多用户：0-否、1-是',
+  `compatible` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '兼容SS',
+  `single` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '单端口多用户：0-否、1-是',
   `single_force` TINYINT(4) NULL DEFAULT NULL COMMENT '模式：0-兼容模式、1-严格模式',
   `single_port` VARCHAR(50) NULL DEFAULT '' COMMENT '端口号，用,号分隔',
   `single_passwd` VARCHAR(50) NULL DEFAULT '' COMMENT '密码',
@@ -119,14 +119,14 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(64) NOT NULL DEFAULT '' COMMENT '密码',
-  `port` int(11) NOT NULL DEFAULT '0' COMMENT 'SS端口',
-  `passwd` varchar(16) NOT NULL DEFAULT '' COMMENT 'SS密码',
-  `vmess_id` varchar(64) NOT NULL DEFAULT '' COMMENT 'V2ray用户ID',
-  `transfer_enable` bigint(20) NOT NULL DEFAULT '1073741824000' COMMENT '可用流量，单位字节，默认1TiB',
+  `port` int(11) NOT NULL DEFAULT '0' COMMENT '代理端口',
+  `passwd` varchar(16) NOT NULL DEFAULT '' COMMENT '代理密码',
+  `vmess_id` varchar(64) NOT NULL DEFAULT '' COMMENT 'V2Ray用户ID',
+  `transfer_enable` bigint(20) NOT NULL DEFAULT '1099511627776' COMMENT '可用流量，单位字节，默认1TiB',
   `u` bigint(20) NOT NULL DEFAULT '0' COMMENT '已上传流量，单位字节',
   `d` bigint(20) NOT NULL DEFAULT '0' COMMENT '已下载流量，单位字节',
   `t` int(11) NOT NULL DEFAULT '0' COMMENT '最后使用时间',
-  `enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'SS状态',
+  `enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '代理状态',
   `method` varchar(30) NOT NULL DEFAULT 'aes-256-cfb' COMMENT '加密方式',
   `protocol` varchar(30) NOT NULL DEFAULT 'origin' COMMENT '协议',
   `protocol_param` varchar(255) DEFAULT '' COMMENT '协议参数',
@@ -140,7 +140,7 @@ CREATE TABLE `user` (
   `usage` VARCHAR(10) NOT NULL DEFAULT '4' COMMENT '用途：1-手机、2-电脑、3-路由器、4-其他',
   `pay_way` tinyint(4) NOT NULL DEFAULT '0' COMMENT '付费方式：0-免费、1-季付、2-月付、3-半年付、4-年付',
   `balance` int(11) NOT NULL DEFAULT '0' COMMENT '余额，单位分',
-  `score` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
+  `score` int(11) NOT NULL DEFAULT '0' COMMENT '积分，暂无用',
   `enable_time` date DEFAULT NULL COMMENT '开通日期',
   `expire_time` date NOT NULL DEFAULT '2099-01-01' COMMENT '过期时间',
   `ban_time` int(11) NOT NULL DEFAULT '0' COMMENT '封禁到期时间',
@@ -185,13 +185,10 @@ CREATE TABLE `level` (
 -- ----------------------------
 -- Records of `level`
 -- ----------------------------
-INSERT INTO `level` VALUES (1, '1', '青铜');
-INSERT INTO `level` VALUES (2, '2', '白银');
-INSERT INTO `level` VALUES (3, '3', '黄金');
-INSERT INTO `level` VALUES (4, '4', '铂金');
-INSERT INTO `level` VALUES (5, '5', '钻石');
-INSERT INTO `level` VALUES (6, '6', '星耀');
-INSERT INTO `level` VALUES (7, '7', '王者');
+INSERT INTO `level` VALUES (1, '1', '普通用户');
+INSERT INTO `level` VALUES (2, '2', 'VIP1');
+INSERT INTO `level` VALUES (3, '3', 'VIP2');
+INSERT INTO `level` VALUES (4, '4', 'VIP3');
 
 
 -- ----------------------------
@@ -295,12 +292,12 @@ INSERT INTO `config` VALUES ('8', 'reset_password_times', 3);
 INSERT INTO `config` VALUES ('9', 'website_url', 'https://www.ssrpanel.com');
 INSERT INTO `config` VALUES ('10', 'is_active_register', 1);
 INSERT INTO `config` VALUES ('11', 'active_times', 3);
-INSERT INTO `config` VALUES ('12', 'login_add_score', 1);
-INSERT INTO `config` VALUES ('13', 'min_rand_score', 1);
-INSERT INTO `config` VALUES ('14', 'max_rand_score', 100);
+INSERT INTO `config` VALUES ('12', 'is_checkin', 1);
+INSERT INTO `config` VALUES ('13', 'min_rand_traffic', 10);
+INSERT INTO `config` VALUES ('14', 'max_rand_traffic', 500);
 INSERT INTO `config` VALUES ('15', 'wechat_qrcode', '');
 INSERT INTO `config` VALUES ('16', 'alipay_qrcode', '');
-INSERT INTO `config` VALUES ('17', 'login_add_score_range', 1440);
+INSERT INTO `config` VALUES ('17', 'traffic_limit_time', 1440);
 INSERT INTO `config` VALUES ('18', 'referral_traffic', 1024);
 INSERT INTO `config` VALUES ('19', 'referral_percent', 0.2);
 INSERT INTO `config` VALUES ('20', 'referral_money', 100);
