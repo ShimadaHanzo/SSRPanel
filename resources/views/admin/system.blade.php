@@ -49,6 +49,12 @@
                                         <li>
                                             <a href="#tab_10" data-toggle="tab"> 支付宝当面付 </a>
                                         </li>
+                                        <li id="li_tab_geetest" class="tab_captcha" style="display:none;">
+                                            <a href="#tab_geetest" data-toggle="tab"> Geetest 极验 </a>
+                                        </li>
+                                        <li id="li_tab_googleCaptcha" class="tab_captcha" style="display:none;">
+                                            <a href="#tab_googleCaptcha" data-toggle="tab"> Google reCAPTCHA </a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="portlet-body">
@@ -121,7 +127,12 @@
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                             <label for="is_captcha" class="col-md-3 control-label">验证码</label>
                                                             <div class="col-md-9">
-                                                                <input type="checkbox" class="make-switch" @if($is_captcha) checked @endif id="is_captcha" data-on-color="success" data-off-color="danger" data-on-text="启用" data-off-text="关闭">
+                                                                <select id="is_captcha" class="form-control select2" name="is_captcha">
+                                                                    <option value="0" @if($is_captcha == '0') selected @endif>关闭</option>
+                                                                    <option value="1" @if($is_captcha == '1') selected @endif>普通验证码</option>
+                                                                    <option value="2" @if($is_captcha == '2') selected @endif>Geetest 极验</option>
+                                                                    <option value="3" @if($is_captcha == '3') selected @endif>Google reCAPTCHA</option>
+                                                                </select>
                                                                 <span class="help-block"> 启用后登录、注册需要输入验证码 </span>
                                                             </div>
                                                         </div>
@@ -608,42 +619,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="is_push_bear" class="col-md-3 control-label">PushBear</label>
-                                                            <div class="col-md-9">
-                                                                <input type="checkbox" class="make-switch" @if($is_push_bear) checked @endif id="is_push_bear" data-on-color="success" data-off-color="danger" data-on-text="启用" data-off-text="关闭">
-                                                                <span class="help-block"> 使用PushBear推送微信消息给用户（<a href="https://pushbear.ftqq.com/admin/#/signin" target="_blank">创建消息通道</a>） </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="push_bear_send_key" class="col-md-3 control-label">PushBear SendKey</label>
-                                                            <div class="col-md-9">
-                                                                <div class="input-group">
-                                                                    <input class="form-control" type="text" name="push_bear_send_key" value="{{$push_bear_send_key}}" id="push_bear_send_key" placeholder="创建消息通道后即可获取" />
-                                                                    <span class="input-group-btn">
-                                                                        <button class="btn btn-success" type="button" onclick="setPushBearSendKey()">修改</button>
-                                                                    </span>
-                                                                </div>
-                                                                <span class="help-block"> 启用PushBear，请务必填入本值 </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="push_bear_qrcode" class="col-md-3 control-label">PushBear订阅二维码</label>
-                                                            <div class="col-md-9">
-                                                                <div class="input-group">
-                                                                    <input class="form-control" type="text" name="push_bear_qrcode" value="{{$push_bear_qrcode}}" id="push_bear_qrcode" placeholder="填入创建好的消息通道的二维码URL" />
-                                                                    <span class="input-group-btn">
-                                                                        <button class="btn btn-success" type="button" onclick="setPushBearQrCode()">修改</button>
-                                                                    </span>
-                                                                </div>
-                                                                <span class="help-block"> 创建消息通道后，在二维码上点击右键“复制图片地址”并粘贴至此处 </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-6 col-xs-12"></div>
-                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -999,6 +974,7 @@
                                                                         <button class="btn btn-success" type="button" onclick="setF2fpayAppId()">修改</button>
                                                                     </span>
                                                                 </div>
+                                                                <span class="help-block"> 即：APPID </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1013,16 +989,99 @@
                                                                         <button class="btn btn-success" type="button" onclick="setF2fpayPrivateKey()">修改</button>
                                                                     </span>
                                                                 </div>
+                                                                <span class="help-block"> 即：rsa_private_key，不包括首尾格式 </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                                             <label for="alipay_public_key"
-                                                                   class="col-md-3 control-label">RSA公钥</label>
+                                                                   class="col-md-3 control-label">支付宝公钥</label>
                                                             <div class="col-md-9">
                                                                 <div class="input-group">
                                                                     <input class="form-control" type="text" name="f2fpay_public_key" value="{{$f2fpay_public_key}}" id="f2fpay_public_key"/>
                                                                     <span class="input-group-btn">
                                                                     <button class="btn btn-success" type="button" onclick="setF2fpayPublicKey()">修改</button>
+                                                                </span>
+                                                                </div>
+                                                                <span class="help-block"> 注意不是RSA公钥 </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="f2fpay_subject_name"
+                                                                   class="col-md-3 control-label">自定义商品名称</label>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="f2fpay_subject_name" value="{{$f2fpay_subject_name}}" id="f2fpay_subject_name"/>
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-success" type="button" onclick="setF2fpaySubjectName()">修改</button>
+                                                                    </span>
+                                                                </div>
+                                                                <span class="help-block"> 用于在用户支付宝客户端显示 </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane" id="tab_geetest">
+                                            <form action="#" method="post" class="form-horizontal">
+                                                <div class="portlet-body">
+                                                    <div class="form-group">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="alipay_private_key"
+                                                            class="col-md-3 control-label">ID</label>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="geetest_id" value="{{$geetest_id}}" id="geetest_id"/>
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-success" type="button" onclick="setGeetestId()">修改</button>
+                                                                    </span>
+                                                                </div>
+                                                                <span class="help-block"> 本功能需要 <a href="https://auth.geetest.com/login/" target="_blank">极验后台</a> 申请权限及应用 </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="alipay_public_key"
+                                                                   class="col-md-3 control-label">KEY</label>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="geetest_key" value="{{$geetest_key}}" id="geetest_key"/>
+                                                                    <span class="input-group-btn">
+                                                                    <button class="btn btn-success" type="button" onclick="setGeetestKey()">修改</button>
+                                                                </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane" id="tab_googleCaptcha">
+                                            <form action="#" method="post" class="form-horizontal">
+                                                <div class="portlet-body">
+                                                    <div class="form-group">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="alipay_private_key"
+                                                            class="col-md-3 control-label">网站密钥</label>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="google_captcha_sitekey" value="{{$google_captcha_sitekey}}" id="google_captcha_sitekey"/>
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-success" type="button" onclick="setGoogleCaptchaId()">修改</button>
+                                                                    </span>
+                                                                </div>
+                                                                <span class="help-block"> 本功能需要 <a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA后台</a> 申请权限及应用 （申请需科学上网，日常验证不用） </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                                            <label for="alipay_public_key"
+                                                                   class="col-md-3 control-label">密钥</label>
+                                                            <div class="col-md-9">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="google_captcha_secret" value="{{$google_captcha_secret}}" id="google_captcha_secret"/>
+                                                                    <span class="input-group-btn">
+                                                                    <button class="btn btn-success" type="button" onclick="setGoogleCaptchaKey()">修改</button>
                                                                 </span>
                                                                 </div>
                                                             </div>
@@ -1261,22 +1320,21 @@
         });
 
         // 启用、禁用验证码
-        $('#is_captcha').on({
-            'switchChange.bootstrapSwitch': function (event, state) {
-                var is_captcha = state ? 1 : 0;
+        $('#is_captcha').change(function () {
+            var is_captcha = $(this).val();
+            toggleCaptchaTab(is_captcha);
 
-                $.post("{{url('admin/setConfig')}}", {
-                    _token: '{{csrf_token()}}',
-                    name: 'is_captcha',
-                    value: is_captcha
-                }, function (ret) {
-                    layer.msg(ret.message, {time: 1000}, function () {
-                        if (ret.status == 'fail') {
-                            window.location.reload();
-                        }
-                    });
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'is_captcha',
+                value: is_captcha
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
                 });
-            }
+            });
         });
 
         // 启用、禁用免费邀请码
@@ -1440,25 +1498,6 @@
                     _token: '{{csrf_token()}}',
                     name: 'is_custom_subscribe',
                     value: is_custom_subscribe
-                }, function (ret) {
-                    layer.msg(ret.message, {time: 1000}, function () {
-                        if (ret.status == 'fail') {
-                            window.location.reload();
-                        }
-                    });
-                });
-            }
-        });
-
-        // 启用、禁用PushBear
-        $('#is_push_bear').on({
-            'switchChange.bootstrapSwitch': function (event, state) {
-                var is_push_bear = state ? 1 : 0;
-
-                $.post("{{url('admin/setConfig')}}", {
-                    _token: '{{csrf_token()}}',
-                    name: 'is_push_bear',
-                    value: is_push_bear
                 }, function (ret) {
                     layer.msg(ret.message, {time: 1000}, function () {
                         if (ret.status == 'fail') {
@@ -1811,40 +1850,6 @@
             });
         }
 
-        // 设置PushBear的SendKey
-        function setPushBearSendKey() {
-            var push_bear_send_key = $("#push_bear_send_key").val();
-
-            $.post("{{url('admin/setConfig')}}", {
-                _token: '{{csrf_token()}}',
-                name: 'push_bear_send_key',
-                value: push_bear_send_key
-            }, function (ret) {
-                layer.msg(ret.message, {time: 1000}, function () {
-                    if (ret.status == 'fail') {
-                        window.location.reload();
-                    }
-                });
-            });
-        }
-
-        // 设置PushBear的消息通道二维码URL
-        function setPushBearQrCode() {
-            var push_bear_qrcode = $("#push_bear_qrcode").val();
-
-            $.post("{{url('admin/setConfig')}}", {
-                _token: '{{csrf_token()}}',
-                name: 'push_bear_qrcode',
-                value: push_bear_qrcode
-            }, function (ret) {
-                layer.msg(ret.message, {time: 1000}, function () {
-                    if (ret.status == 'fail') {
-                        window.location.reload();
-                    }
-                });
-            });
-        }
-
         // 设置TCP阻断检测提醒次数
         function setTcpCheckWarningTimes() {
             var tcp_check_warning_times = $("#tcp_check_warning_times").val();
@@ -2110,11 +2115,113 @@
             });
         }
 
-
         // 自动去除公钥和私钥中的空格和换行
         $("#alipay_public_key,#alipay_private_key,#f2fpay_public_key,#f2fpay_private_key").on('input', function () {
             $(this).val($(this).val().replace(/(\s+)/g, ''));
         });
+
+        // 设置f2fpay的商品名称
+        function setF2fpaySubjectName() {
+            var f2fpay_subject_name = $("#f2fpay_subject_name").val();
+
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'f2fpay_subject_name',
+                value: f2fpay_subject_name
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        // 设置极验的Id
+        function setGeetestId() {
+            var geetest_id = $("#geetest_id").val();
+
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'geetest_id',
+                value: geetest_id
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        // 设置极验的Key
+        function setGeetestKey() {
+            var geetest_key = $("#geetest_key").val();
+
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'geetest_key',
+                value: geetest_key
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        // 设置Google reCAPTCHA的Id
+        function setGoogleCaptchaId() {
+            var google_captcha_sitekey = $("#google_captcha_sitekey").val();
+
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'google_captcha_sitekey',
+                value: google_captcha_sitekey
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        // 设置Google reCAPTCHA的Key
+        function setGoogleCaptchaKey() {
+            var google_captcha_secret = $("#google_captcha_secret").val();
+
+            $.post("{{url('admin/setConfig')}}", {
+                _token: '{{csrf_token()}}',
+                name: 'google_captcha_secret',
+                value: google_captcha_secret
+            }, function (ret) {
+                layer.msg(ret.message, {time: 1000}, function () {
+                    if (ret.status == 'fail') {
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        // 隐藏未选择的验证码Tab
+        function toggleCaptchaTab(captcha){
+            var is_captcha = captcha ? parseInt(captcha) : {{\App\Components\Helpers::systemConfig()['is_captcha']}};
+
+            switch (is_captcha) {
+                case 2:
+                    $('.tab_captcha').hide().parent().find('#li_tab_geetest').show();
+                    break;
+                case 3:
+                    $('.tab_captcha').hide().parent().find('#li_tab_googleCaptcha').show();
+                    break;
+                default:
+                    $('.tab_captcha').hide();
+                    break;
+            }
+        };
+        toggleCaptchaTab();
 
         // 设置最小积分
         $("#min_rand_traffic").change(function () {
@@ -2610,5 +2717,6 @@
                 });
             });
         }
+        
     </script>
 @endsection
