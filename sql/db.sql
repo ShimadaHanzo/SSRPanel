@@ -65,6 +65,8 @@ CREATE TABLE `ss_node` (
   `v2_host` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'V2ray伪装的域名',
   `v2_path` VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'V2ray WS/H2路径',
   `v2_tls` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'V2ray底层传输安全 0 未开启 1 开启',
+  `v2_insider_port` INT(11) NOT NULL DEFAULT '10550' COMMENT 'V2ray内部端口（内部监听），v2_port为0时有效',
+  `v2_outsider_port` INT(11) NOT NULL DEFAULT '443' COMMENT 'V2ray外部端口（外部覆盖），v2_port为0时有效',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -369,6 +371,11 @@ INSERT INTO `config` VALUES ('85', 'f2fpay_app_id', '');
 INSERT INTO `config` VALUES ('86', 'f2fpay_private_key', '');
 INSERT INTO `config` VALUES ('87', 'f2fpay_public_key', '');
 INSERT INTO `config` VALUES ('88', 'website_security_code', '');
+INSERT INTO `config` VALUES ('89', 'f2fpay_subject_name', '');
+INSERT INTO `config` VALUES ('90', 'geetest_id', '');
+INSERT INTO `config` VALUES ('91', 'geetest_key', '');
+INSERT INTO `config` VALUES ('92', 'google_captcha_sitekey', '');
+INSERT INTO `config` VALUES ('93', 'google_captcha_secret', '');
 
 -- ----------------------------
 -- Table structure for `article`
