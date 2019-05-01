@@ -47,9 +47,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('autoDecGoodsTraffic')->everyTenMinutes();
         $schedule->command('autoResetUserTraffic')->daily();
         $schedule->command('autoCheckNodeTCP')->everyMinute();
-        $schedule->command('autoStatisticsNodeDailyTraffic')->dailyAt('00:15');
+        $schedule->command('autoStatisticsNodeDailyTraffic')->dailyAt('00:30');
         $schedule->command('autoStatisticsNodeHourlyTraffic')->hourly();
-        $schedule->command('autoStatisticsUserDailyTraffic')->dailyAt('00:10');
+        $schedule->command('autoStatisticsUserDailyTraffic')->dailyAt('00:25');
         $schedule->command('autoStatisticsUserHourlyTraffic')->hourly();
         $schedule->command('userTrafficAbnormalAutoWarning')->hourly();
         $schedule->command('userExpireAutoWarning')->dailyAt('20:00');
